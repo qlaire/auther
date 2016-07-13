@@ -7,6 +7,11 @@ app.factory('LoginFactory',function($http,$log){
     console.log("email and password", email, password);
     return $http.post('/api/login/', {email:email, password:password});
   }
+
+  AppFactory.logout=function(){
+    return $http.put('/api/logout/');
+  }
+
   return AppFactory;
 
 })

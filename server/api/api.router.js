@@ -10,4 +10,6 @@ router.use('/login', require('./login-auth/login.router'));
 
 router.use('/signup', require('./signup/signup.router'));
 
+router.use('/logout', require('./logout/logout.router'));
+
 module.exports = router;
