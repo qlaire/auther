@@ -72,6 +72,7 @@
   </div>
   <div class="media-right media-middle">
     <button
+      ng-show="getIsAdmin()"
       ng-if="!isForm"
       class="btn btn-default"
       ng-click="removeUser()"

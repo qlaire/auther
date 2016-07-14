@@ -1,6 +1,7 @@
 'use strict';
 
-app.controller('UserListCtrl', function ($scope, users, User) {
+app.controller('UserListCtrl', function ($scope, users, User, LoginFactory) {
+  angular.extend($scope, LoginFactory);
   $scope.users = users;
   $scope.addUser = function () {
     $scope.userAdd.save()

@@ -2,6 +2,7 @@
 
 app.factory('LoginFactory',function($http,$log){
   var currentUserId;
+  var currUserIsAdmin = false;
   
   var AppFactory={};
   
@@ -15,11 +16,27 @@ app.factory('LoginFactory',function($http,$log){
     .then(function(user) {
       console.log(user);
       AppFactory.setCurrentUserId(user.id);
+      AppFactory.setIsAdmin(user);
       console.log(currentUserId);
     });
   }
 
+  AppFactory.setIsAdmin=function(user){
+    currUserIsAdmin=user.isAdmin;
+  }
+
+  AppFactory.clearUserInfo=function(){
+    currentUserId=null;
+    currUserIsAdmin=false;
+  }
+
+  AppFactory.getIsAdmin=function(){
+    console.log("user is admin", currUserIsAdmin);
+    return currUserIsAdmin;
+  }
+
   AppFactory.logout=function(){
+    AppFactory.clearUserInfo();
     return $http.put('/api/logout/');
   }
 
@@ -31,15 +48,7 @@ app.factory('LoginFactory',function($http,$log){
     return currentUserId;
   };
 
-  AppFactory.checkIfAdmin=function(userId){
-    $http.get('/api/users/'+userId)
-    .then(function(res){
-      return res.data;
-    })
-    .then(function(user){
-      return user.isAdmin;
-    })
-  }
+
 
   AppFactory.checkIfLoggedIn=function(userId){
     console.log("author id", userId);

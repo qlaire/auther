@@ -1,6 +1,6 @@
 'use strict';
 
-app.factory('SignupFactory',function($http){
+app.factory('SignupFactory',function($http,LoginFactory){
   var SignupFactory={};
   SignupFactory.submitSignup=function(email,password){
     console.log('in factory submitsignup')
@@ -8,7 +8,10 @@ app.factory('SignupFactory',function($http){
     .then(function(response) {
       console.log("the response is", response);
       return response.data;
-    });
+    })
+    .then(function(user){
+        LoginFactory.setCurrentUserId(user.id);   
+    })
   }
   return SignupFactory;
 
