@@ -3,7 +3,7 @@
 app.factory('LoginFactory',function($http,$log){
   var currentUserId=null;
   var currUserIsAdmin = false;
-
+// this was working for our local authentication, but it's not for Google.
   $http.get('/api/login/me')
   .then(function(res){return res.data})
   .then(function(user){

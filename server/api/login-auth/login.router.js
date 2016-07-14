@@ -13,23 +13,25 @@ router.post('/',function(req,res,next){
     if (!user) {
       res.sendStatus(401);
     } else {
-      req.session.userId = user.id; 
+      req.logIn(user, function(err) {
+        if (err) {
+          return next(err);
+        }
+        return res.redirect('/');
+      });
       res.status(200).send(user);     
     }
   })
   .catch(next);
 });
-
+// are we doing this route properly? something is wrong with the results of our get request in login.factory.js
 router.get('/me', function(req, res, next) {
-  var userId = req.session.userId;
-  User.findById(userId)
-  .then(function(user) {
-    if (user) {
-      res.status(200).send(user);
-    }
+  var user = req.session.user;
+  if (user) {
+    res.status(200).send(user);
+  } else {
     res.sendStatus(401);
-  })
-  .catch(next);
+  }
 });
 
 

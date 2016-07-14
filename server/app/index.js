@@ -15,11 +15,6 @@ app.use(session({
   secret: 'tongiscool' // or whatever you like
 }));
 
-// app.use(function (req, res, next) {
-//   console.log('session', req.session);
-//   next();
-// });
-
 app.use(require('./statics.middleware'));
 
 
@@ -31,6 +26,24 @@ app.use('/api', function (req, res, next) {
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+passport.serializeUser(function (user, done) {
+  done(null, user.id)
+});
+
+passport.deserializeUser(function (id, done) {
+  User.findById(id)
+  .then(function(user) {
+    done(null, user);
+  })
+  .catch(done);
+});
+
+app.use(function (req, res, next) {
+  console.log('user', req.user);
+  console.log('session', req.session);
+  next();
+});
 
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 passport.use(
@@ -69,7 +82,6 @@ app.get('/auth/google/callback',
     failureRedirect : '/' // or wherever
   })
 );
-
 
 app.use('/api', require('../api/api.router'));
 
