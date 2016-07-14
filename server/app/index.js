@@ -4,6 +4,7 @@ var app = require('express')();
 var path = require('path');
 var session = require('express-session');
 var passport = require('passport');
+var User = require('../api/users/user.model');
 
 app.use(require('./logging.middleware'));
 
@@ -14,10 +15,10 @@ app.use(session({
   secret: 'tongiscool' // or whatever you like
 }));
 
-app.use(function (req, res, next) {
-  console.log('session', req.session);
-  next();
-});
+// app.use(function (req, res, next) {
+//   console.log('session', req.session);
+//   next();
+// });
 
 app.use(require('./statics.middleware'));
 
@@ -30,6 +31,33 @@ app.use('/api', function (req, res, next) {
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+passport.use(
+  new GoogleStrategy({
+    clientID: '143733168752-6aig3kiil8vhpf4ts0ermc7lbv1hg35t.apps.googleusercontent.com',
+    clientSecret: 'JfFlILL9L3M0_ia739AhkcUo',
+    callbackURL: '/auth/google/callback'
+  },
+  // Google will send back the token and profile
+  function (token, refreshToken, profile, done) {
+    console.log('IN CALLBACK')
+    console.log('---', 'in verification callback', profile, '---');
+    var info = {
+      name: profile.displayName,
+      email: profile.emails[0].value,
+      photo: profile.photos ? profile.photos[0].value : undefined
+    };
+    User.findOrCreate({
+      where: {googleId: profile.id},
+      defaults: info
+    })
+    .spread(function (user) {
+      done(null, user);
+    })
+    .catch(done);
+  })
+);
 
 // Google authentication and login 
 app.get('/auth/google', passport.authenticate('google', { scope : 'email' }));
