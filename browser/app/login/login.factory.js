@@ -1,9 +1,17 @@
 'use strict';
 
 app.factory('LoginFactory',function($http,$log){
-  var currentUserId;
+  var currentUserId=null;
   var currUserIsAdmin = false;
-  
+
+  $http.get('/api/login/me')
+  .then(function(res){return res.data})
+  .then(function(user){
+    currentUserId=user.id;
+    currUserIsAdmin=user.isAdmin;
+  })
+  .catch($log.error);
+
   var AppFactory={};
   
   AppFactory.submitLogin=function(email, password){
@@ -56,6 +64,14 @@ app.factory('LoginFactory',function($http,$log){
     return (userId===currentUserId);
   }
 
+  // AppFactory.loadUser=function(){
+  //   return $http.get('/api/login/me')
+  //   .then(function(res){return res.data})
+  //   .then(function(user){
+  //     AppFactory.setCurrentUserId(user.id);
+  //     AppFactory.setIsAdmin(user);
+  //   })
+  // }
 
   return AppFactory;
 

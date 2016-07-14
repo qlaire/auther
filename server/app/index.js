@@ -3,6 +3,7 @@
 var app = require('express')();
 var path = require('path');
 var session = require('express-session');
+var passport = require('passport');
 
 app.use(require('./logging.middleware'));
 
@@ -26,6 +27,20 @@ app.use('/api', function (req, res, next) {
   console.log('counter', ++req.session.counter);
   next();
 });
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Google authentication and login 
+app.get('/auth/google', passport.authenticate('google', { scope : 'email' }));
+
+// handle the callback after Google has authenticated the user
+app.get('/auth/google/callback',
+  passport.authenticate('google', {
+    successRedirect : '/', // or wherever
+    failureRedirect : '/' // or wherever
+  })
+);
 
 
 app.use('/api', require('../api/api.router'));

@@ -20,5 +20,17 @@ router.post('/',function(req,res,next){
   .catch(next);
 });
 
+router.get('/me', function(req, res, next) {
+  var userId = req.session.userId;
+  User.findById(userId)
+  .then(function(user) {
+    if (user) {
+      res.status(200).send(user);
+    }
+    res.sendStatus(401);
+  })
+  .catch(next);
+});
+
 
 module.exports = router;
