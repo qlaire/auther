@@ -3,7 +3,8 @@
 app.factory('LoginFactory',function($http,$log){
   var currentUserId=null;
   var currUserIsAdmin = false;
-// this was working for our local authentication, but it's not for Google.
+// this works with Google now after fixing the login/me route
+// however, zeke@zeke.zeke is only an admin when you refresh. need to put in app.run?
   $http.get('/api/login/me')
   .then(function(res){return res.data})
   .then(function(user){

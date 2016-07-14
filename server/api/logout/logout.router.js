@@ -4,7 +4,7 @@ var router = require('express').Router();
 var User = require('../users/user.model');
 
 router.put('/',function(req,res,next){
-  req.session.destroy();
+  req.logout();
   res.sendStatus(204);     
 });
 

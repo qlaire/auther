@@ -17,16 +17,16 @@ router.post('/',function(req,res,next){
         if (err) {
           return next(err);
         }
-        return res.redirect('/');
+        res.status(204).send(user);
       });
-      res.status(200).send(user);     
+           
     }
   })
   .catch(next);
 });
-// are we doing this route properly? something is wrong with the results of our get request in login.factory.js
+// fixed so that we're sending req.user instead of req.session.user
 router.get('/me', function(req, res, next) {
-  var user = req.session.user;
+  var user = req.user;
   if (user) {
     res.status(200).send(user);
   } else {
