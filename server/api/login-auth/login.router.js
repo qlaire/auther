@@ -14,7 +14,7 @@ router.post('/',function(req,res,next){
       res.sendStatus(401);
     } else {
       req.session.userId = user.id; 
-      res.sendStatus(204);     
+      res.status(200).send(user);     
     }
   })
   .catch(next);

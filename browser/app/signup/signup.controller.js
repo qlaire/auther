@@ -1,12 +1,12 @@
 'use strict';
 
-app.controller('SignupCtrl',function($scope,SignupFactory,$log){
-  console.log('SIGNUP FACTORY THINKS THEREFORE IT IS')
+app.controller('SignupCtrl',function($scope,SignupFactory,$log, LoginFactory){
   $scope.submitSignup=function(email,password){
-    console.log('SUBMITTING SIGNUP')
     SignupFactory.submitSignup(email,password)
-    .then(function(){
-      console.log('signed up')
+    .then(function(user){
+      console.log("the user is", user);
+      console.log('signed up');
+      LoginFactory.setCurrentUserId(user.id);
     })
     .catch($log.error)
   }

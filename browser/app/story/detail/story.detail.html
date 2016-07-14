@@ -19,7 +19,7 @@
   </ul>
   <br>
   <p
-    contenteditable
+    contenteditable="{{checkIfLoggedIn(story.author_id)}}"
     ng-model="story.paragraphs"
     ng-model-options="{debounce: 500}"
     ng-list="<br><br>"
